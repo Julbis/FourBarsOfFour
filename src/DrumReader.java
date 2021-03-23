@@ -1,5 +1,6 @@
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -18,18 +19,23 @@ public class DrumReader {
 
     private static final int NOTE_ON = 0x90;
     private static final int NOTE_OFF = 0x80;
-    private int readFiles = 0;
+    private int filesRead = 0;
     private HashMap<Integer, Double>[] probabilities = new HashMap[64];
+    private ArrayList<File> inputFiles = new ArrayList<>();
 
     public DrumReader() {
         initProbabilities();
     }
 
     public void read(String path) {
+
+        final File folder = new File(path);
+        addFilesForFolder(folder);
+
         Map<Integer, LinkedList<Integer>> queuedHits = new HashMap<Integer, LinkedList<Integer>>();
         try {
-            Sequence seq = MidiSystem.getSequence(new File(path));
-            readFiles++;
+            Sequence seq = MidiSystem.getSequence(inputFiles.get(0));
+            filesRead++;
             int countOfNoteOns = 0;
             int trackSize = 0;
             for (Track track : seq.getTracks()) {
@@ -68,9 +74,9 @@ public class DrumReader {
                             int sixteenth = queuedHits.get(key).removeFirst();
                             System.out.println("Dequeued a hit for " + key + " at sixteenth number "+ sixteenth);
                             if (probabilities[sixteenth].get(key) != null) {
-                                probabilities[sixteenth].put(key, (probabilities[sixteenth].get(key) + 1) / readFiles);
+                                probabilities[sixteenth].put(key, (probabilities[sixteenth].get(key) + 1) / filesRead);
                             } else {
-                                probabilities[sixteenth].put(key, (double) (1 / readFiles));
+                                probabilities[sixteenth].put(key, (double) (1 / filesRead));
                             }
                         }
                     }
@@ -99,6 +105,21 @@ public class DrumReader {
     public HashMap<Integer, Double>[] getProbabilities() {
         return probabilities;
     }
+
+    /* Method below stolen from:
+    https://stackoverflow.com/questions/1844688/how-to-read-all-files-in-a-folder-from-java
+    */
+    public void addFilesForFolder(final File folder) {
+        for (final File fileEntry : folder.listFiles()) {
+            if (fileEntry.isDirectory()) {
+                addFilesForFolder(fileEntry);
+            } else {
+                System.out.println("Filename: " + fileEntry.getName());
+                inputFiles.add(fileEntry);
+            }
+        }
+    }
+
 
 
 // STULEN KOD NEDAN (från: https://stackoverflow.com/questions/3850688/reading-midi-files-in-java) :

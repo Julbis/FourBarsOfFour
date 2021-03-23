@@ -34,7 +34,7 @@ public class DrumGen {
 
     private void read() {
         reader = new DrumReader();
-        reader.read("Corpus/midi_export.mid");
+        reader.read("Corpus/");
     }
 
     private void initProbabilities() {
