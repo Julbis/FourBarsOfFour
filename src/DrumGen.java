@@ -22,6 +22,8 @@ public class DrumGen {
     private HashMap<String, Double>[] probs = new HashMap[65]; // First element is empty to simulate starting at 1, easier logic.
     private HashMap<Integer, Double>[] probabilities = new HashMap[64];
     private DrumReader reader;
+    private static final int NOTE_ON = 0x99; // Channel 10, note on
+    private static final int NOTE_OFF = 0x89; // Channel 10, note off
 
     public DrumGen() {
         initTrack();
@@ -122,26 +124,27 @@ public class DrumGen {
         try {
             for (int i = 0; i < probabilities.length; i++) {
                 double randNum = rand.nextDouble();
+                /* value of 'key' determines which part of the drum kit is played */
                 for (Integer key : probabilities[i].keySet()) {
                     if (shouldBeOutput(key, i, randNum)) {
                         ShortMessage drumHit = new ShortMessage();
-                        drumHit.setMessage(0x99, key, 64);
+                        drumHit.setMessage(NOTE_ON, key, 64);
                         MidiEvent event = new MidiEvent(drumHit, currentTick);
                         track.add(event);
 
                         drumHit = new ShortMessage();
-                        drumHit.setMessage(0x89, key, /*0x40*/ 64); // Channel 10, note off
+                        drumHit.setMessage(NOTE_OFF, key, /*0x40*/ 64);
                         event = new MidiEvent(drumHit, currentTick + 6);
                         track.add(event);
                     }
                 }
                 currentTick += 6;
             }
-            MetaMessage metaMessage = new MetaMessage();
-            byte[] bet = {}; // empty array
-            metaMessage.setMessage(0x2F,bet,0x00);
-            MidiEvent event = new MidiEvent(metaMessage, currentTick);
-            track.add(event);
+           MetaMessage metaMessage = new MetaMessage();
+           byte[] bet = {}; // empty array
+           metaMessage.setMessage(0x2F,bet,0x00);
+           MidiEvent event = new MidiEvent(metaMessage, currentTick);
+           track.add(event);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
