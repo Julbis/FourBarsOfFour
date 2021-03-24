@@ -16,6 +16,7 @@ import javax.sound.midi.*;
  *
  */
 public class DrumGen {
+    private String section;
     private Sequence seq;
     private Track track;
     private Random rand = new Random();
@@ -25,7 +26,8 @@ public class DrumGen {
     private static final int NOTE_ON = 0x99; // Channel 10, note on
     private static final int NOTE_OFF = 0x89; // Channel 10, note off
 
-    public DrumGen() {
+    public DrumGen(String section) {
+        this.section = section;
         initTrack();
 //      initProbs();
         read();
@@ -33,7 +35,7 @@ public class DrumGen {
     }
 
     private void read() {
-        reader = new DrumReader("Corpus/");
+        reader = new DrumReader("Corpus/" + section, section);
 //        reader.read();
         reader.work();
     }
@@ -155,6 +157,10 @@ public class DrumGen {
         return generatedNum <= probabilities[index].get(drum);
     }
 
+    public String getSection() {
+        return this.section;
+    }
+
 //    public void generateTrack() {
 //        long currentTick = 0;
 //        for (int i = 1; i < probs.length; i++) {
@@ -217,20 +223,32 @@ public class DrumGen {
 //    }
 
     public static void main(String[] args) {
-        DrumGen drLoop = new DrumGen();
-        drLoop.generateTrack();
-        Sequence s = drLoop.getSequence();
-        File outputFolder = new File("Output");
-        if (!outputFolder.exists()) {
-            outputFolder.mkdir();
+        DrumGen drLoop1 = new DrumGen("Verse");
+        drLoop1.generateTrack();
+        Sequence s1 = drLoop1.getSequence();
+        File outputFolder1 = new File("Output/" + drLoop1.getSection());
+        if (!outputFolder1.exists()) {
+            outputFolder1.mkdir();
+        }
+        DrumGen drLoop2 = new DrumGen("Chorus");
+        drLoop2.generateTrack();
+        Sequence s2 = drLoop2.getSequence();
+        File outputFolder2 = new File("Output/" + drLoop2.getSection());
+        if (!outputFolder2.exists()) {
+            outputFolder2.mkdir();
         }
         try {
-            //Write to file
+            //Write to files
             LocalDateTime now = LocalDateTime.now();
-            String fileName = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
-            File f = new File(outputFolder.getName() + "/" + fileName + ".mid");
-            MidiSystem.write(s,1,f);
-            System.out.println("Finished generating \"" + fileName + ".mid\".");
+            String fileName1 = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
+            File f1 = new File(outputFolder1.getParent() + "/" + outputFolder1.getName() + "/" + fileName1 + ".mid");
+            System.out.println();
+            MidiSystem.write(s1,1,f1);
+            System.out.println("Finished generating \"" + fileName1 + ".mid\".");
+            String fileName2 = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
+            File f2 = new File(outputFolder2.getParent() + "/" + outputFolder2.getName() + "/" + fileName2 + ".mid");
+            MidiSystem.write(s2,1,f2);
+            System.out.println("Finished generating \"" + fileName2 + ".mid\".");
         } catch (IOException e) {
             System.out.println("Couldn't write to file.");
         } catch (Exception e) {
