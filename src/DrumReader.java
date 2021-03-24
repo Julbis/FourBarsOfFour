@@ -16,6 +16,7 @@ import javax.sound.midi.Track;
 // TODO: GENERERA SANNOLIKHETER FRÅN COUNTS ISTÄLLET FÖR DIREKT VID LÄSNING
 public class DrumReader {
 
+    private String outputPath;
     private static final int NOTE_ON = 0x90;
     private static final int NOTE_OFF = 0x80;
     private int filesRead = 0;
@@ -26,7 +27,8 @@ public class DrumReader {
     private ArrayList<File> inputFiles = new ArrayList<>();
 
 
-    public DrumReader(String path) {
+    public DrumReader(String path, String outputPath) {
+        this.outputPath = outputPath;
         counts = new HashMap[64];
         countsFromFile = new HashMap[64];
         probabilities = new HashMap[64];
