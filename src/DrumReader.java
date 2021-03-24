@@ -20,21 +20,30 @@ public class DrumReader {
     private static final int NOTE_ON = 0x90;
     private static final int NOTE_OFF = 0x80;
     private int filesRead = 0;
+    private final File folder;
     private HashMap<Integer, Double>[] probabilities = new HashMap[64];
     private ArrayList<File> inputFiles = new ArrayList<>();
 
-    public DrumReader() {
+    public DrumReader(String path) {
         initProbabilities();
+        folder = new File(path);
+        addFilesForFolder(folder);
     }
 
-    public void read(String path) {
+    public void readFolder() {
+        System.out.println("Starting to read folder...");
+        for (File file : inputFiles) {
+            System.out.println("Initializing read of " + file.getName());
+            read(file);
+        }
+    }
 
-        final File folder = new File(path);
-        addFilesForFolder(folder);
-
+    public void read(File sample) {
         Map<Integer, LinkedList<Integer>> queuedHits = new HashMap<Integer, LinkedList<Integer>>();
         try {
-            Sequence seq = MidiSystem.getSequence(inputFiles.get(0));
+//            Sequence seq = MidiSystem.getSequence(inputFiles.get(0));
+            System.out.println("Reading " + sample.getName());
+            Sequence seq = MidiSystem.getSequence(sample);
             filesRead++;
             int countOfNoteOns = 0;
             int trackSize = 0;
