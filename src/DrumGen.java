@@ -35,7 +35,7 @@ public class DrumGen {
     private void read() {
         reader = new DrumReader("Corpus/");
 //        reader.read();
-        reader.readFolder();
+        reader.work();
     }
 
     private void initProbabilities() {
