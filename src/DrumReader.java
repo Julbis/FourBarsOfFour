@@ -43,7 +43,6 @@ public class DrumReader {
         writeCounts();
         readCounts();
         calculateProbabilities();
-        //printCounts();
     }
 
     public void readFolder() {
@@ -111,13 +110,6 @@ public class DrumReader {
         }
     }
 
-    //private void printCounts() {
-    //    for (int i = 0; i < counts2.length; i++) {
-    //        System.out.println("count2 length: " + counts2.length);
-    //        System.out.println("counts2: " + counts2[i].toString());
-    //    }
-    //}
-
     private void initCounts() {
         for (int i = 0; i < counts.length; i++) {
             counts[i] = new HashMap<Integer, Integer>();
@@ -183,7 +175,6 @@ public class DrumReader {
 
     private void writeCounts() {
         try {
-
             //Write to file
             File outputFolder = new File("HitCount");
             if (!outputFolder.exists()) {
@@ -220,8 +211,6 @@ public class DrumReader {
                 line = line.replaceAll("\\}", "");
                 line = line.replaceAll(" ", "");
 
-                System.out.println(line);
-
                 if (!line.trim().isEmpty()) {
                     //System.out.println("file line: " + line);
 
@@ -230,9 +219,6 @@ public class DrumReader {
                     for (String s : split) {
                         //System.out.println("file splits: " + s);
                         String[] pairs = s.split("=");
-                        for (String p : pairs) {
-                           // System.out.println("keys and values: " + p);
-                        }
                         int key = Integer.parseInt(pairs[0]);
                         int value = Integer.parseInt(pairs[1]);
                         if (x < 64) {
