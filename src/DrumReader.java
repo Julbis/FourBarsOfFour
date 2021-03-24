@@ -100,9 +100,9 @@ public class DrumReader {
             for (LinkedList<Integer> queue : queuedHits.values()) {
                 System.out.println(queue.toString());
             }
-            for (int i = 0; i < counts.length; i++) {
-                System.out.println("counts: " + counts[i].toString());
-            }
+            //for (int i = 0; i < counts.length; i++) {
+            //    System.out.println("counts: " + counts[i].toString());
+            //}
 
         } catch (Exception e) {
             System.out.println(e.getMessage());

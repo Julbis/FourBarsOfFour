@@ -231,6 +231,7 @@ public class DrumGen {
             File f = new File(outputFolder.getName() + "/" + fileName + ".mid");
             MidiSystem.write(s,1,f);
             System.out.println("Finished generating \"" + fileName + ".mid\".");
+
         } catch (IOException e) {
             System.out.println("Couldn't write to file.");
         } catch (Exception e) {
