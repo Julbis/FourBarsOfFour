@@ -21,19 +21,16 @@ public class DrumReader {
     private int filesRead = 0;
     private final File folder;
     private final HashMap<Integer, Integer>[] counts;
-    private final HashMap<Integer, Integer>[] counts2;
+    private final HashMap<Integer, Integer>[] countsFromFile;
     private final HashMap<Integer, Double>[] probabilities;
-    private final HashMap<Integer, Double>[] probabilities2;
     private ArrayList<File> inputFiles = new ArrayList<>();
 
 
     public DrumReader(String path) {
         counts = new HashMap[64];
-        counts2 = new HashMap[64];
+        countsFromFile = new HashMap[64];
         probabilities = new HashMap[64];
-        probabilities2 = new HashMap[64];
         initCounts();
-        initCounts2();
         initProbabilities();
         folder = new File(path);
         addFilesForFolder(folder);
@@ -41,7 +38,10 @@ public class DrumReader {
 
     public void work() {
         readFolder();
+        writeCounts();
+        readCounts();
         calculateProbabilities();
+        //printCounts();
     }
 
     public void readFolder() {
@@ -85,7 +85,7 @@ public class DrumReader {
                                 (shortMessage.getCommand() == NOTE_ON && shortMessage.getData2() == 0)) {
                             int key = shortMessage.getData1();
                             int sixteenth = queuedHits.get(key).removeFirst();
-                            System.out.println("Dequeued a hit for " + key + " at sixteenth number "+ sixteenth);
+                            System.out.println("Dequeued a hit for " + key + " at sixteenth number " + sixteenth);
                             Integer countAtSixteenth = counts[sixteenth].get(key);
                             if (countAtSixteenth != null) {
                                 counts[sixteenth].put(key, countAtSixteenth + 1);
@@ -104,30 +104,24 @@ public class DrumReader {
                 System.out.println("counts: " + counts[i].toString());
             }
 
-            writeCounts();
-            readCounts();
-            //printCounts();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    private void printCounts() {
-        for (int i = 0; i < counts2.length; i++) {
-            System.out.println("count2 length: " + counts2.length);
-            System.out.println("counts2: " + counts2[i].toString());
-        }
-    }
+    //private void printCounts() {
+    //    for (int i = 0; i < counts2.length; i++) {
+    //        System.out.println("count2 length: " + counts2.length);
+    //        System.out.println("counts2: " + counts2[i].toString());
+    //    }
+    //}
 
     private void initCounts() {
         for (int i = 0; i < counts.length; i++) {
             counts[i] = new HashMap<Integer, Integer>();
         }
-    }
-
-    private void initCounts2() {
-        for (int i = 0; i < counts.length; i++) {
-            counts[i] = new HashMap<Integer, Integer>();
+        for (int i = 0; i < countsFromFile.length; i++) {
+            countsFromFile[i] = new HashMap<Integer, Integer>();
         }
     }
 
@@ -138,8 +132,8 @@ public class DrumReader {
     }
 
     public void calculateProbabilities() {
-        for (int i = 0; i < counts.length; i++) {
-            HashMap<Integer, Integer> current = counts[i];
+        for (int i = 0; i < countsFromFile.length; i++) {
+            HashMap<Integer, Integer> current = countsFromFile[i];
             if (!current.isEmpty()) {
                 for (Integer key : current.keySet()) {
                     int value = current.get(key);
@@ -213,57 +207,43 @@ public class DrumReader {
     }
 
     private void readCounts() {
+        int x = 0;
         try {
             BufferedReader reader = new BufferedReader(new FileReader("HitCount/counts.txt"));
             String line = reader.readLine();
-
+            // read the key value pairs (hit type / hit count) for each sixteenth note and insert into hashmap 'counts'
             while (line != null) {
-                System.out.println("count2 line: " + line);
-                line = reader.readLine();
-            }
+                // formatting
+                line = line.replaceAll("\\{", "");
+                line = line.replaceAll("\\}", "");
+                line = line.replaceAll(" ", "");
 
-            reader.close();
-        } catch (IOException e) {
+                if (!line.trim().isEmpty()) {
+                    //System.out.println("file line: " + line);
 
-        }
+                    String[] split = line.split(",");
 
-    }
-
-    private void readCounts2() {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader("HitCount/counts.txt"));
-            String line = reader.readLine();
-
-            while (line != null) {
-                // read the key value pairs (hit type / hit count) for each sixteenth note and insert into hashmap 'counts'
-
-                for (int i = 0; i < counts2.length; i++) {
-                    // formatting
-                    line = line.replaceAll("\\{", "");
-                    line = line.replaceAll("\\}", "");
-                    line = line.replaceAll(" ", "");
-
-                    if (line.trim().isEmpty()) {
-
-                        String[] split = line.split(",");
-
-                        for (String s : split) {
-                            System.out.println("count2 " + s);
-                            String[] pairs = line.split("=");
-                            int key = Integer.parseInt(pairs[0]);
-                            int value = Integer.parseInt(pairs[1]);
-                            counts2[i].put(key, value);
+                    for (String s : split) {
+                        //System.out.println("file splits: " + s);
+                        String[] pairs = s.split("=");
+                        for (String p : pairs) {
+                           // System.out.println("keys and values: " + p);
+                        }
+                        int key = Integer.parseInt(pairs[0]);
+                        int value = Integer.parseInt(pairs[1]);
+                        if (x < 64) {
+                            countsFromFile[x].put(key, value);
+                            x++;
                         }
                     }
-                    line = reader.readLine();
                 }
+                line = reader.readLine();
             }
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 
 // STULEN KOD NEDAN (från: https://stackoverflow.com/questions/3850688/reading-midi-files-in-java) :
 //
