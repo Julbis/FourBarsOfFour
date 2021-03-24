@@ -220,11 +220,15 @@ public class DrumGen {
         DrumGen drLoop = new DrumGen();
         drLoop.generateTrack();
         Sequence s = drLoop.getSequence();
+        File outputFolder = new File("Output");
+        if (!outputFolder.exists()) {
+            outputFolder.mkdir();
+        }
         try {
             //Write to file
             LocalDateTime now = LocalDateTime.now();
             String fileName = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
-            File f = new File(fileName + ".mid");
+            File f = new File(outputFolder.getName() + "/" + fileName + ".mid");
             MidiSystem.write(s,1,f);
             System.out.println("Finished generating \"" + fileName + ".mid\".");
         } catch (IOException e) {
