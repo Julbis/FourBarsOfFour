@@ -21,13 +21,22 @@ public class DrumReader {
     private static final int NOTE_OFF = 0x80;
     private int filesRead = 0;
     private final File folder;
-    private HashMap<Integer, Double>[] probabilities = new HashMap[64];
+    private final HashMap<Integer, Integer>[] counts;
+    private final HashMap<Integer, Double>[] probabilities;
     private ArrayList<File> inputFiles = new ArrayList<>();
 
     public DrumReader(String path) {
+        counts = new HashMap[64];
+        probabilities = new HashMap[64];
+        initCounts();
         initProbabilities();
         folder = new File(path);
         addFilesForFolder(folder);
+    }
+
+    public void work() {
+        readFolder();
+        calculateProbabilities();
     }
 
     public void readFolder() {
@@ -35,6 +44,7 @@ public class DrumReader {
         for (File file : inputFiles) {
             System.out.println("Initializing read of " + file.getName());
             read(file);
+            filesRead++;
         }
     }
 
@@ -44,12 +54,8 @@ public class DrumReader {
 //            Sequence seq = MidiSystem.getSequence(inputFiles.get(0));
             System.out.println("Reading " + sample.getName());
             Sequence seq = MidiSystem.getSequence(sample);
-            filesRead++;
-            int countOfNoteOns = 0;
-            int trackSize = 0;
             for (Track track : seq.getTracks()) {
                 System.out.println(track.ticks());
-                trackSize = track.size();
 //                System.out.println("Current track size: " + trackSize);
                 for (int i = 0; i < track.size(); i++) {
                     MidiEvent event = track.get(i);
@@ -57,7 +63,6 @@ public class DrumReader {
                     if (message instanceof ShortMessage) {
                         ShortMessage shortMessage = (ShortMessage) message;
                         if (shortMessage.getCommand() == NOTE_ON && shortMessage.getData2() != 0) {
-                            countOfNoteOns++;
                             int key = shortMessage.getData1();
                             long tick = event.getTick();
                             int sixteenth = (int) tick / 240;
@@ -71,22 +76,16 @@ public class DrumReader {
                             queue.add(sixteenth);
                             System.out.println("Adding sixteenth number " + sixteenth + " to queue for drum hit " + key);
                             queuedHits.put(key, queue);
-
-//                            if (probabilities[sixteenth].get(key) != null) {
-//                                probabilities[sixteenth].put(key, (probabilities[sixteenth].get(key) + 1) / readFiles);
-//                            } else {
-//                                probabilities[sixteenth].put(key, (double)(1 / readFiles));
-//                            }
-
                         } else if (shortMessage.getCommand() == NOTE_OFF ||
                                 (shortMessage.getCommand() == NOTE_ON && shortMessage.getData2() == 0)) {
                             int key = shortMessage.getData1();
                             int sixteenth = queuedHits.get(key).removeFirst();
                             System.out.println("Dequeued a hit for " + key + " at sixteenth number "+ sixteenth);
-                            if (probabilities[sixteenth].get(key) != null) {
-                                probabilities[sixteenth].put(key, (probabilities[sixteenth].get(key) + 1) / filesRead);
+                            Integer countAtSixteenth = counts[sixteenth].get(key);
+                            if (countAtSixteenth != null) {
+                                counts[sixteenth].put(key, countAtSixteenth + 1);
                             } else {
-                                probabilities[sixteenth].put(key, (double) (1 / filesRead));
+                                counts[sixteenth].put(key, 1);
                             }
                         }
                     }
@@ -96,19 +95,38 @@ public class DrumReader {
             for (LinkedList<Integer> queue : queuedHits.values()) {
                 System.out.println(queue.toString());
             }
-            for (int i = 0; i < probabilities.length; i++) {
-                System.out.println(probabilities[i].toString());
+            for (int i = 0; i < counts.length; i++) {
+                System.out.println(counts[i].toString());
             }
-            System.out.println("Note on events: " + countOfNoteOns);
-            System.out.println("Total events: " + trackSize);
         } catch (Exception e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    private void initCounts() {
+        for (int i = 0; i < counts.length; i++) {
+            counts[i] = new HashMap<Integer, Integer>();
         }
     }
 
     private void initProbabilities() {
         for (int i = 0; i < probabilities.length; i++) {
             probabilities[i] = new HashMap<Integer, Double>();
+        }
+    }
+
+    public void calculateProbabilities() {
+        for (int i = 0; i < counts.length; i++) {
+            HashMap<Integer, Integer> current = counts[i];
+            if (!current.isEmpty()) {
+                for (Integer key : current.keySet()) {
+                    int value = current.get(key);
+                    probabilities[i].put(key, (double) value / filesRead); // Insert the percentage of samples in which this drum hit occurred on the current sixteenth note
+                }
+            }
+        }
+        for (int i = 0; i < probabilities.length; i++) {
+            System.out.println(probabilities[i].toString());
         }
     }
 
