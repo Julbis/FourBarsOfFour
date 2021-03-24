@@ -38,4 +38,4 @@ build/
 /bin1/
 java/build/**
 
-*.mid
+Output/
