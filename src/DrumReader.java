@@ -1,9 +1,8 @@
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.io.*;
+import java.time.LocalDateTime;
+import java.util.*;
+
 
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.MidiMessage;
@@ -22,13 +21,19 @@ public class DrumReader {
     private int filesRead = 0;
     private final File folder;
     private final HashMap<Integer, Integer>[] counts;
+    private final HashMap<Integer, Integer>[] counts2;
     private final HashMap<Integer, Double>[] probabilities;
+    private final HashMap<Integer, Double>[] probabilities2;
     private ArrayList<File> inputFiles = new ArrayList<>();
+
 
     public DrumReader(String path) {
         counts = new HashMap[64];
+        counts2 = new HashMap[64];
         probabilities = new HashMap[64];
+        probabilities2 = new HashMap[64];
         initCounts();
+        initCounts2();
         initProbabilities();
         folder = new File(path);
         addFilesForFolder(folder);
@@ -96,14 +101,31 @@ public class DrumReader {
                 System.out.println(queue.toString());
             }
             for (int i = 0; i < counts.length; i++) {
-                System.out.println(counts[i].toString());
+                System.out.println("counts: " + counts[i].toString());
             }
+
+            writeCounts();
+            readCounts();
+            //printCounts();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
+    private void printCounts() {
+        for (int i = 0; i < counts2.length; i++) {
+            System.out.println("count2 length: " + counts2.length);
+            System.out.println("counts2: " + counts2[i].toString());
+        }
+    }
+
     private void initCounts() {
+        for (int i = 0; i < counts.length; i++) {
+            counts[i] = new HashMap<Integer, Integer>();
+        }
+    }
+
+    private void initCounts2() {
         for (int i = 0; i < counts.length; i++) {
             counts[i] = new HashMap<Integer, Integer>();
         }
@@ -130,6 +152,21 @@ public class DrumReader {
         }
     }
 
+    public void calculateProbabilities2() {
+        for (int i = 0; i < counts.length; i++) {
+            HashMap<Integer, Integer> current = counts[i];
+            if (!current.isEmpty()) {
+                for (Integer key : current.keySet()) {
+                    int value = current.get(key);
+                    probabilities[i].put(key, (double) value / filesRead); // Insert the percentage of samples in which this drum hit occurred on the current sixteenth note
+                }
+            }
+        }
+        for (int i = 0; i < probabilities.length; i++) {
+            System.out.println(probabilities[i].toString());
+        }
+    }
+
     public HashMap<Integer, Double>[] getProbabilities() {
         return probabilities;
     }
@@ -137,7 +174,7 @@ public class DrumReader {
     /* Method below stolen from:
     https://stackoverflow.com/questions/1844688/how-to-read-all-files-in-a-folder-from-java
     */
-    public void addFilesForFolder(final File folder) {
+    private void addFilesForFolder(final File folder) {
         for (final File fileEntry : folder.listFiles()) {
             if (fileEntry.isDirectory()) {
                 addFilesForFolder(fileEntry);
@@ -148,6 +185,84 @@ public class DrumReader {
         }
     }
 
+    private void writeCounts() {
+        try {
+
+            //Write to file
+            File outputFolder = new File("HitCount");
+            if (!outputFolder.exists()) {
+                outputFolder.mkdir();
+            }
+
+            LocalDateTime now = LocalDateTime.now();
+            String fileName = "counts";
+            File file = new File(outputFolder + "/" + fileName + ".txt");
+            PrintWriter writer = new PrintWriter(file);
+
+            for (int i = 0; i < counts.length; i++) {
+                writer.println(counts[i].toString());
+            }
+
+            writer.close();
+            System.out.println("Finished generating \"" + fileName + ".txt\".");
+        } catch (IOException e) {
+            System.out.println("Couldn't write to file.");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void readCounts() {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("HitCount/counts.txt"));
+            String line = reader.readLine();
+
+            while (line != null) {
+                System.out.println("count2 line: " + line);
+                line = reader.readLine();
+            }
+
+            reader.close();
+        } catch (IOException e) {
+
+        }
+
+    }
+
+    private void readCounts2() {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("HitCount/counts.txt"));
+            String line = reader.readLine();
+
+            while (line != null) {
+                // read the key value pairs (hit type / hit count) for each sixteenth note and insert into hashmap 'counts'
+
+                for (int i = 0; i < counts2.length; i++) {
+                    // formatting
+                    line = line.replaceAll("\\{", "");
+                    line = line.replaceAll("\\}", "");
+                    line = line.replaceAll(" ", "");
+
+                    if (line.trim().isEmpty()) {
+
+                        String[] split = line.split(",");
+
+                        for (String s : split) {
+                            System.out.println("count2 " + s);
+                            String[] pairs = line.split("=");
+                            int key = Integer.parseInt(pairs[0]);
+                            int value = Integer.parseInt(pairs[1]);
+                            counts2[i].put(key, value);
+                        }
+                    }
+                    line = reader.readLine();
+                }
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 // STULEN KOD NEDAN (från: https://stackoverflow.com/questions/3850688/reading-midi-files-in-java) :
