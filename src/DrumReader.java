@@ -69,7 +69,8 @@ public class DrumReader {
 //                                probabilities[sixteenth].put(key, (double)(1 / readFiles));
 //                            }
 
-                        } else {
+                        } else if (shortMessage.getCommand() == NOTE_OFF ||
+                                (shortMessage.getCommand() == NOTE_ON && shortMessage.getData2() == 0)) {
                             int key = shortMessage.getData1();
                             int sixteenth = queuedHits.get(key).removeFirst();
                             System.out.println("Dequeued a hit for " + key + " at sixteenth number "+ sixteenth);
