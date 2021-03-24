@@ -218,6 +218,8 @@ public class DrumReader {
                 line = line.replaceAll("\\}", "");
                 line = line.replaceAll(" ", "");
 
+                System.out.println(line);
+
                 if (!line.trim().isEmpty()) {
                     //System.out.println("file line: " + line);
 
@@ -233,10 +235,10 @@ public class DrumReader {
                         int value = Integer.parseInt(pairs[1]);
                         if (x < 64) {
                             countsFromFile[x].put(key, value);
-                            x++;
                         }
                     }
                 }
+                x++;
                 line = reader.readLine();
             }
             reader.close();
