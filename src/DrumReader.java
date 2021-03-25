@@ -176,7 +176,7 @@ public class DrumReader {
     private void writeCounts() {
         try {
             //Write to file
-            File outputFolder = new File("HitCount");
+            File outputFolder = new File("HitCount" + "/" + outputPath);
             if (!outputFolder.exists()) {
                 outputFolder.mkdir();
             }
