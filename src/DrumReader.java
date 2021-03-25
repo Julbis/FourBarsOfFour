@@ -72,7 +72,7 @@ public class DrumReader {
                             int key = shortMessage.getData1();
                             long tick = event.getTick();
                             int sixteenth = (int) tick / 240;
-                            System.out.println("Read a " + key + " at " + tick);
+//                            System.out.println("Read a " + key + " at " + tick);
                             LinkedList<Integer> queue = null;
                             if (queuedHits.containsKey(key)) {
                                 queue = queuedHits.get(key);
@@ -80,13 +80,13 @@ public class DrumReader {
                                 queue = new LinkedList<Integer>();
                             }
                             queue.add(sixteenth);
-                            System.out.println("Adding sixteenth number " + sixteenth + " to queue for drum hit " + key);
+//                            System.out.println("Adding sixteenth number " + sixteenth + " to queue for drum hit " + key);
                             queuedHits.put(key, queue);
                         } else if (shortMessage.getCommand() == NOTE_OFF ||
                                 (shortMessage.getCommand() == NOTE_ON && shortMessage.getData2() == 0)) {
                             int key = shortMessage.getData1();
                             int sixteenth = queuedHits.get(key).removeFirst();
-                            System.out.println("Dequeued a hit for " + key + " at sixteenth number " + sixteenth);
+//                            System.out.println("Dequeued a hit for " + key + " at sixteenth number " + sixteenth);
                             Integer countAtSixteenth = counts[sixteenth].get(key);
                             if (countAtSixteenth != null) {
                                 counts[sixteenth].put(key, countAtSixteenth + 1);
