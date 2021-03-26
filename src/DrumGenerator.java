@@ -134,7 +134,8 @@ public class DrumGenerator {
         long currentPulses = 0;
         try {
             for (int i = 0; i < probabilities.length; i++) {
-                double randNum = rand.nextDouble();
+//                double randNum = rand.nextDouble();
+                double randNum = (double) 1 / (rand.nextInt(10) + 1);
                 /* value of 'key' determines which part of the drum kit is played */
                 for (Integer key : probabilities[i].keySet()) {
                     if (shouldBeOutput(key, i, randNum)) {
