@@ -140,6 +140,7 @@ public class DrumGenerator {
                 for (Integer key : probabilities[i].keySet()) {
                     double randNum = (double) 1 / (rand.nextInt(10) + 1);
 //                    double randNum = rand.nextDouble();
+//                    double randNum = (rand.nextInt(100) + 1) * 0.01;
                     if (shouldBeOutput(key, i, randNum)) {
                         ShortMessage drumHit = new ShortMessage();
                         drumHit.setMessage(NOTE_ON, key, 64);
