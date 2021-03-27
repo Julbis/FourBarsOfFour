@@ -135,10 +135,10 @@ public class DrumGenerator {
         try {
             for (int i = 0; i < probabilities.length; i++) {
 //                double randNum = rand.nextDouble(); // Fine-grained steps of ???%
-//                double randNum = (double) 1 / (rand.nextInt(10) + 1); // If hit occurs in at least 50% of cases, hit is always printed. Swings the hardest.
+//                double randNum = (double) 1 / (rand.nextInt(10) + 1); // If hit occurs in at least 50% of cases, hit is almost always printed. Produces good results.
                 /* value of 'key' determines which part of the drum kit is played */
                 for (Integer key : probabilities[i].keySet()) {
-//                    double randNum = (double) 1 / (rand.nextInt(10) + 1); // If hit occurs in at least 50% of cases, hit is always printed. Swings the hardest.
+//                    double randNum = (double) 1 / (rand.nextInt(10) + 1); // If hit occurs in at least 50% of cases, hit is almost always printed. Produces good results.
 //                    double randNum = rand.nextDouble(); // Fine-grained steps of ???%
 //                    double randNum = (rand.nextInt(100) + 1) * 0.01; // Steps of 1%. Can sound good, but unreliable.
                     double randNum = (rand.nextInt(10) + 1) * 0.1; // Steps of 10%
