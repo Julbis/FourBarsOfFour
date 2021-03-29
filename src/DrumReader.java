@@ -11,9 +11,6 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
-// TODO: IMPLEMENTERA LÄSNING AV EN HEL MAPP MED FILER
-// TODO: SKRIV UT RÅA COUNTS TILL FIL
-// TODO: GENERERA SANNOLIKHETER FRÅN COUNTS ISTÄLLET FÖR DIREKT VID LÄSNING
 public class DrumReader {
 
     private String outputPath;
