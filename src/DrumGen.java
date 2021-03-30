@@ -93,31 +93,6 @@ public class DrumGen {
         }
     }
 
-//    private void initProbs() {
-//        for (int i = 1; i < probs.length; i++) {
-//            probs[i] = new HashMap<String, Double>();
-//        }
-//        for (int i = 1; i < probs.length; i++) {
-//            double prob = 0.75;
-//            double probMod = 0.50 + rand.nextDouble() * (1.25 - 0.50); //Random multiplier;
-//            if (i % 2 != 0) {
-//                probs[i].put("kick", prob * probMod);
-//                prob = 0.25;
-//                probMod = 0.12 + rand.nextDouble() * (1.25 - 0.50);
-//                probs[i].put("snare", prob * probMod);
-//            } else {
-//                probs[i].put("snare", prob * probMod);
-//                prob = 0.25;
-//                probMod = 0.12 + rand.nextDouble() * (1.25 - 0.50);
-//                probs[i].put("kick", prob * probMod);
-//            }
-//            prob = 0.5;
-//            probMod = 0.35 + rand.nextDouble() * (1.25 - 0.50); //Random multiplier
-//            probs[i].put("hi-hat", prob * probMod);
-//        }
-//
-//    }
-
     public Sequence getSequence() {
         return seq;
     }
@@ -160,6 +135,67 @@ public class DrumGen {
     public String getSection() {
         return this.section;
     }
+
+    public static void main(String[] args) {
+        DrumGen drLoop1 = new DrumGen("Verse");
+        drLoop1.generateTrack();
+        Sequence s1 = drLoop1.getSequence();
+        File outputFolder1 = new File("Output/" + drLoop1.getSection());
+        if (!outputFolder1.exists()) {
+            outputFolder1.mkdir();
+        }
+        DrumGen drLoop2 = new DrumGen("Chorus");
+        drLoop2.generateTrack();
+        Sequence s2 = drLoop2.getSequence();
+        File outputFolder2 = new File("Output/" + drLoop2.getSection());
+        if (!outputFolder2.exists()) {
+            outputFolder2.mkdir();
+        }
+        try {
+            //Write to files
+            LocalDateTime now = LocalDateTime.now();
+            String fileName1 = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
+            File f1 = new File(outputFolder1.getParent() + "/" + outputFolder1.getName() + "/" + fileName1 + ".mid");
+            System.out.println();
+            MidiSystem.write(s1,1,f1);
+            System.out.println("Finished generating \"" + fileName1 + ".mid\".");
+            String fileName2 = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
+            File f2 = new File(outputFolder2.getParent() + "/" + outputFolder2.getName() + "/" + fileName2 + ".mid");
+            MidiSystem.write(s2,1,f2);
+            System.out.println("Finished generating \"" + fileName2 + ".mid\".");
+        } catch (IOException e) {
+            System.out.println("Couldn't write to file.");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+}
+
+
+//    private void initProbs() {
+//        for (int i = 1; i < probs.length; i++) {
+//            probs[i] = new HashMap<String, Double>();
+//        }
+//        for (int i = 1; i < probs.length; i++) {
+//            double prob = 0.75;
+//            double probMod = 0.50 + rand.nextDouble() * (1.25 - 0.50); //Random multiplier;
+//            if (i % 2 != 0) {
+//                probs[i].put("kick", prob * probMod);
+//                prob = 0.25;
+//                probMod = 0.12 + rand.nextDouble() * (1.25 - 0.50);
+//                probs[i].put("snare", prob * probMod);
+//            } else {
+//                probs[i].put("snare", prob * probMod);
+//                prob = 0.25;
+//                probMod = 0.12 + rand.nextDouble() * (1.25 - 0.50);
+//                probs[i].put("kick", prob * probMod);
+//            }
+//            prob = 0.5;
+//            probMod = 0.35 + rand.nextDouble() * (1.25 - 0.50); //Random multiplier
+//            probs[i].put("hi-hat", prob * probMod);
+//        }
+//
+//    }
 
 //    public void generateTrack() {
 //        long currentTick = 0;
@@ -221,43 +257,6 @@ public class DrumGen {
 //            }
 //        }
 //    }
-
-    public static void main(String[] args) {
-        DrumGen drLoop1 = new DrumGen("Verse");
-        drLoop1.generateTrack();
-        Sequence s1 = drLoop1.getSequence();
-        File outputFolder1 = new File("Output/" + drLoop1.getSection());
-        if (!outputFolder1.exists()) {
-            outputFolder1.mkdir();
-        }
-        DrumGen drLoop2 = new DrumGen("Chorus");
-        drLoop2.generateTrack();
-        Sequence s2 = drLoop2.getSequence();
-        File outputFolder2 = new File("Output/" + drLoop2.getSection());
-        if (!outputFolder2.exists()) {
-            outputFolder2.mkdir();
-        }
-        try {
-            //Write to files
-            LocalDateTime now = LocalDateTime.now();
-            String fileName1 = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
-            File f1 = new File(outputFolder1.getParent() + "/" + outputFolder1.getName() + "/" + fileName1 + ".mid");
-            System.out.println();
-            MidiSystem.write(s1,1,f1);
-            System.out.println("Finished generating \"" + fileName1 + ".mid\".");
-            String fileName2 = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
-            File f2 = new File(outputFolder2.getParent() + "/" + outputFolder2.getName() + "/" + fileName2 + ".mid");
-            MidiSystem.write(s2,1,f2);
-            System.out.println("Finished generating \"" + fileName2 + ".mid\".");
-        } catch (IOException e) {
-            System.out.println("Couldn't write to file.");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-}
-
-
 
 
 /**

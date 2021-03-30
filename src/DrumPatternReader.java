@@ -51,7 +51,6 @@ public class DrumPatternReader {
                 filesRead++;
             }
         }
-
     }
 
     /*
@@ -209,5 +208,4 @@ public class DrumPatternReader {
             e.printStackTrace();
         }
     }
-
 }
