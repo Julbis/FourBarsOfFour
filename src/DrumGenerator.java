@@ -148,6 +148,13 @@ public class DrumGenerator {
 //                    double randNum = (rand.nextInt(95) + 1) * 0.01;
                     double randNum = (rand.nextInt(100) + 1) * 0.01; // Steps of 1%, between 0.01 and 1.0
 
+//                    double randNum = (rand.nextInt(50) + 1) * 0.02;
+//                    double randNum = (rand.nextInt(40) + 1) * 0.025;
+//                    double randNum = (rand.nextInt(38) + 1) * (1.0 / 38.0);
+//                    double randNum = (rand.nextInt(37) + 1) * (1.0 / 37.0);
+//                    double randNum = (rand.nextInt(35) + 1) * (1.0 / 35.0);
+//                    double randNum = (rand.nextInt(30) + 1) * (1.0 / 30.0);
+
                     /* Varying degrees of """creativity""" for random generators using multiplicative inverse
                     *  which applies "weight" to the drums with higher relative frequency */
 //                    double randNum = 1.0 / (rand.nextInt(20) + 1);
