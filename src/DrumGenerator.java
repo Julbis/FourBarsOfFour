@@ -134,18 +134,30 @@ public class DrumGenerator {
         long currentPulses = 0;
         try {
             for (int i = 0; i < probabilities.length; i++) {
-//                double randNum = rand.nextDouble(); // Fine-grained steps of ???%
-//                double randNum = (double) 1 / (rand.nextInt(10) + 1); // If hit occurs in at least 50% of cases, hit is almost always printed. Produces good results.
                 /* value of 'key' determines which part of the drum kit is played */
                 for (Integer key : probabilities[i].keySet()) {
-//                    double randNum = (double) 1 / (rand.nextInt(10) + 1); // If hit occurs in at least 50% of cases, hit is almost always printed. Produces good results.
+//                    double randNum = 1.0 / (rand.nextInt(10) + 1); // If hit occurs in at least 50% of cases, hit is almost always printed. Produces good results.
 //                    double randNum = rand.nextDouble(); // Fine-grained steps of ???%
-//                    double randNum = (rand.nextInt(1000000) + 1) * 0.000001;
-//                    double randNum = (rand.nextInt(100000) + 1) * 0.00001;
-//                    double randNum = (rand.nextInt(10000) + 1) * 0.0001;
-//                    double randNum = (rand.nextInt(1000) + 1) * 0.001;
+
+                    /* Varying degrees of """creativity""" for random generators that are easy to measure */
+//                    double randNum = (rand.nextInt(34) + 1) * 0.01;
+//                    double randNum = (rand.nextInt(50) + 1) * 0.01;
+//                    double randNum = (rand.nextInt(60) + 1) * 0.01;
+//                    double randNum = (rand.nextInt(75) + 1) * 0.01;
+//                    double randNum = (rand.nextInt(85) + 1) * 0.01;
+//                    double randNum = (rand.nextInt(95) + 1) * 0.01;
                     double randNum = (rand.nextInt(100) + 1) * 0.01; // Steps of 1%, between 0.01 and 1.0
-//                    double randNum = (rand.nextInt(10) + 1) * 0.1; // Steps of 10%, between 0.1 and 1.0
+
+                    /* Varying degrees of """creativity""" for random generators using multiplicative inverse
+                    *  which applies "weight" to the drums with higher relative frequency */
+//                    double randNum = 1.0 / (rand.nextInt(20) + 1);
+//                    double randNum = 1.0 / (rand.nextInt(15) + 1);
+//                    double randNum = 1.0 / (rand.nextInt(9) + 1);
+//                    double randNum = 1.0 / (rand.nextInt(8) + 1);
+//                    double randNum = 1.0 / (rand.nextInt(7) + 1);
+//                    double randNum = 1.0 / (rand.nextInt(6) + 1);
+//                    double randNum = 1.0 / (rand.nextInt(5) + 1);
+
                     if (shouldBeOutput(key, i, randNum)) {
                         ShortMessage drumHit = new ShortMessage();
                         drumHit.setMessage(NOTE_ON, key, 64);
