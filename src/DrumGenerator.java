@@ -136,34 +136,8 @@ public class DrumGenerator {
             for (int i = 0; i < probabilities.length; i++) {
                 /* value of 'key' determines which part of the drum kit is played */
                 for (Integer key : probabilities[i].keySet()) {
-//                    double randNum = 1.0 / (rand.nextInt(10) + 1); // If hit occurs in at least 50% of cases, hit is almost always printed. Produces good results.
-//                    double randNum = rand.nextDouble(); // Fine-grained steps of ???%
-
-                    /* Varying degrees of """creativity""" for random generators that are easy to measure */
-//                    double randNum = (rand.nextInt(34) + 1) * 0.01;
-//                    double randNum = (rand.nextInt(50) + 1) * 0.01;
-//                    double randNum = (rand.nextInt(60) + 1) * 0.01;
-//                    double randNum = (rand.nextInt(75) + 1) * 0.01;
-//                    double randNum = (rand.nextInt(85) + 1) * 0.01;
-//                    double randNum = (rand.nextInt(95) + 1) * 0.01;
-                    double randNum = (rand.nextInt(100) + 1) * 0.01; // Steps of 1%, between 0.01 and 1.0
-
-//                    double randNum = (rand.nextInt(50) + 1) * 0.02;
-//                    double randNum = (rand.nextInt(40) + 1) * 0.025;
-//                    double randNum = (rand.nextInt(38) + 1) * (1.0 / 38.0);
-//                    double randNum = (rand.nextInt(37) + 1) * (1.0 / 37.0);
-//                    double randNum = (rand.nextInt(35) + 1) * (1.0 / 35.0);
-//                    double randNum = (rand.nextInt(30) + 1) * (1.0 / 30.0);
-
-                    /* Varying degrees of """creativity""" for random generators using multiplicative inverse
-                    *  which applies "weight" to the drums with higher relative frequency */
-//                    double randNum = 1.0 / (rand.nextInt(20) + 1);
-//                    double randNum = 1.0 / (rand.nextInt(15) + 1);
-//                    double randNum = 1.0 / (rand.nextInt(9) + 1);
-//                    double randNum = 1.0 / (rand.nextInt(8) + 1);
-//                    double randNum = 1.0 / (rand.nextInt(7) + 1);
-//                    double randNum = 1.0 / (rand.nextInt(6) + 1);
-//                    double randNum = 1.0 / (rand.nextInt(5) + 1);
+                    double randNum = 1.0 / (rand.nextInt(10) + 1); // If hit occurs in at least 50% of cases, hit is almost always printed. Produces good results.
+//                    double randNum = (rand.nextInt(90) + 1) * 0.01 + 0.1; // Steps of 1%, between 0.1 and 1.0
 
                     if (shouldBeOutput(key, i, randNum)) {
                         ShortMessage drumHit = new ShortMessage();
