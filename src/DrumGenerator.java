@@ -137,7 +137,7 @@ public class DrumGenerator {
                 /* value of 'key' determines which part of the drum kit is played */
                 for (Integer key : probabilities[i].keySet()) {
                     double randNum = 1.0 / (rand.nextInt(10) + 1); // If hit occurs in at least 50% of cases, hit is almost always printed. Produces good results.
-//                    double randNum = (rand.nextInt(90) + 1) * 0.01 + 0.1; // Steps of 1%, between 0.1 and 1.0
+//                    double randNum = ((rand.nextInt(90) + 1) * 0.01) + 0.1; // Steps of 1%, between 0.1 and 1.0
 
                     if (shouldBeOutput(key, i, randNum)) {
                         ShortMessage drumHit = new ShortMessage();
