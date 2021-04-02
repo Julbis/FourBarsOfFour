@@ -137,21 +137,6 @@ public class DrumReader {
         }
     }
 
-    public void calculateProbabilities2() {
-        for (int i = 0; i < counts.length; i++) {
-            HashMap<Integer, Integer> current = counts[i];
-            if (!current.isEmpty()) {
-                for (Integer key : current.keySet()) {
-                    int value = current.get(key);
-                    probabilities[i].put(key, (double) value / filesRead); // Insert the percentage of samples in which this drum hit occurred on the current sixteenth note
-                }
-            }
-        }
-        for (int i = 0; i < probabilities.length; i++) {
-            System.out.println(probabilities[i].toString());
-        }
-    }
-
     public HashMap<Integer, Double>[] getProbabilities() {
         return probabilities;
     }
