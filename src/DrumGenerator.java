@@ -40,7 +40,7 @@ public class DrumGenerator {
     }
 
     /*
-        BASED ON: http://www.automatic-pilot.com/midifile.html
+        BASED ON CODE BY Karl Brown: http://www.automatic-pilot.com/midifile.html
      */
     private void initTrack() {
         try {
