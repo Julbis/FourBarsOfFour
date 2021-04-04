@@ -154,15 +154,18 @@ public class DrumGen {
         try {
             //Write to files
             LocalDateTime now = LocalDateTime.now();
+
             String fileName1 = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
             File f1 = new File(outputFolder1.getParent() + "/" + outputFolder1.getName() + "/" + fileName1 + ".mid");
             System.out.println();
             MidiSystem.write(s1,1,f1);
             System.out.println("Finished generating \"" + fileName1 + ".mid\".");
+
             String fileName2 = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
             File f2 = new File(outputFolder2.getParent() + "/" + outputFolder2.getName() + "/" + fileName2 + ".mid");
             MidiSystem.write(s2,1,f2);
             System.out.println("Finished generating \"" + fileName2 + ".mid\".");
+
         } catch (IOException e) {
             System.out.println("Couldn't write to file.");
         } catch (Exception e) {

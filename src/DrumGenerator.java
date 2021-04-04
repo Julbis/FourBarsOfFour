@@ -196,18 +196,33 @@ public class DrumGenerator {
     }
 
     public static void main(String[] args) {
+        // calculates probabilities for chorus
         DrumPatternReader reader = new DrumPatternReader("Chorus");
         reader.work();
+
+        // calculates probabilities for verse
         reader = new DrumPatternReader("Verse");
         reader.work();
+
+        // calculate probabilities for verse + chorus input
+        reader = new DrumPatternReader("All");
+        reader.work();
+
+        // generate loop from chorus input given the calculated probabilities
         DrumGenerator gen = new DrumGenerator("Chorus");
         gen.generateTrack();
         gen.printMidiFile("chorus-loop");
+
+        // generate loop from verse input given the calculated probabilities
         gen = new DrumGenerator("Verse");
         gen.generateTrack();
         gen.printMidiFile("verse-loop");
-    }
 
+        // generate loop from verse + chorus input given the calculated probabilities
+        gen = new DrumGenerator("All");
+        gen.generateTrack();
+        gen.printMidiFile("all-loop");
+    }
 }
 
 
