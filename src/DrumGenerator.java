@@ -136,8 +136,8 @@ public class DrumGenerator {
             for (int i = 0; i < probabilities.length; i++) {
                 /* value of 'key' determines which part of the drum kit is played */
                 for (Integer key : probabilities[i].keySet()) {
-                    double randNum = 1.0 / (rand.nextInt(10) + 1); // If hit occurs in at least 50% of cases, hit is almost always printed. Produces good results.
-//                    double randNum = ((rand.nextInt(90) + 1) * 0.01) + 0.1; // Steps of 1%, between 0.1 and 1.0
+//                    double randNum = 1.0 / (rand.nextInt(10) + 1); // If hit occurs in at least 50% of cases, hit is almost always printed. Produces good results.
+                    double randNum = ((rand.nextInt(90) + 1) * 0.01) + 0.1; // Steps of 1%, between 0.1 and 1.0
 
                     if (shouldBeOutput(key, i, randNum)) {
                         ShortMessage drumHit = new ShortMessage();
@@ -210,13 +210,23 @@ public class DrumGenerator {
 
         // generate loop from chorus input given the calculated probabilities
         DrumGenerator gen = new DrumGenerator("Chorus");
-        gen.generateTrack();
-        gen.printMidiFile("chorus-loop");
+//        gen.generateTrack();
+//        gen.printMidiFile("chorus-loop");
+
+        for (int i = 0; i < 6; i++) {
+            gen.generateTrack();
+            gen.printMidiFile("chorus-loop" + "-" + i);
+        }
 
         // generate loop from verse input given the calculated probabilities
         gen = new DrumGenerator("Verse");
-        gen.generateTrack();
-        gen.printMidiFile("verse-loop");
+//        gen.generateTrack();
+//        gen.printMidiFile("verse-loop");
+
+        for (int i = 0; i < 6; i++) {
+            gen.generateTrack();
+            gen.printMidiFile("verse-loop" + "-" + i);
+        }
 
         // generate loop from verse + chorus input given the calculated probabilities
         gen = new DrumGenerator("All");
