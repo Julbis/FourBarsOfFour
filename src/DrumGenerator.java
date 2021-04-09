@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.Random;
 
 /**
- * Mycket stulet från http://www.automatic-pilot.com/midifile.html
+ * Inspired by Karl Brown: http://www.automatic-pilot.com/midifile.html
  *
- * Good shit: https://www.midi.org/specifications-old/item/table-2-expanded-messages-list-status-bytes
+ * MIDI-information: https://www.midi.org/specifications-old/item/table-2-expanded-messages-list-status-bytes
  *            https://www.midi.org/specifications-old/item/gm-level-1-sound-set
  *            https://www.recordingblogs.com/wiki/midi-set-tempo-meta-message
  *

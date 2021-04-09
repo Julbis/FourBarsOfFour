@@ -11,6 +11,15 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
+/**
+ * Inspired by Sami Koivu:
+ * https://stackoverflow.com/questions/3850688/reading-midi-files-in-java
+ * and stack overflow user going by rich:
+ * https://stackoverflow.com/questions/1844688/how-to-read-all-files-in-a-folder-from-java
+ *
+ * @author Carl Schmidt
+ * @author Julius Boström
+ */
 public class DrumReader {
 
     private String outputPath;
